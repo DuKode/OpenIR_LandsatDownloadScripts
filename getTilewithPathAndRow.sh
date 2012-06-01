@@ -10,7 +10,7 @@ NUM1=$#
 NUM2=2
 TILEPATH=${args[0]}
 TILEROW=${args[1]}
-
+TEMPDIR="tmp"
 
 if [ $NUM1 -eq $NUM2 ]; then
 	echo ""
@@ -34,18 +34,44 @@ echo $TILEDOWNLOADPATH
 #################################################################################
 #PREPARE LOCAL TEMPORARY FOLDER
 #################################################################################
-
-if [ -d "tmp" ]; then 
+echo "#################################"
+echo "PREPARING LOCAL TEMPORARY FOLDER"
+echo " "
+if [ -d $TEMPDIR ]; then 
    
 	echo "temporary directory already exists! thanks for asking..."
+	#################################################################################
+	#empty tmp directory before continuing 
+	#################################################################################
+	echo $(ls -A $TEMPDIR)
+	if [ "$(ls -A $TEMPDIR)" ]; then
+
+	
+	    # do dangerous stuff
+		echo " "
+		read -p "Are you sure you want to delete the data from temporary directory? (y or n) " -n 1 -r
+		echo " "
+		if [[ $REPLY =~ ^[Yy]$ ]];then
+			echo "Emptying temporary directory...."
+			rm tmp/*
+			echo "Done"
+		else
+			echo "$TEMPDIR is Empty"
+		fi
+	else
+		echo "The temporary directory content if any will not be deleted"
+	fi
+
+	
 else
-	mkdir tmp
+	mkdir $TEMPDIR
 	echo "Created temporary directory for data storage..."
 fi
 
-read -p "Press [Enter] key to start lookup FTP directory..."
+echo " "
+echo "lookup FTP directory" $TILEDOWNLOADPATH
+read -p "Press [Enter] key to start lookup FTP directory... FTP directory: $TILEDOWNLOADPATH"
 #################################################################################
-
 
 wget -rq -nd --no-parent -P tmp $TILEDOWNLOADPATH 
 #wget -r -nd --no-parent -P tmp $TILEDOWNLOADPATH 
@@ -61,23 +87,7 @@ TILEFILESARRAY=(`echo $FILES`)
 
 cd .. 
 
-#################################################################################
-#empty tmp directory before continuing 
-#################################################################################
-read -p "Are you sure you want to delete the data from temporary directory? " -n 1 -r
 echo " "
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-    # do dangerous stuff
-	printf " "
-	echo "Emptying directory.... "
-	rm tmp/*
-	echo "Done"
-else
-	echo "The temporary directory content if any will not be deleted"
-fi
-#REMOVE UNZIPPED IMAGES
-rm tmp/*.TIF
 read -p "Press [Enter] key to download the first file"
 #################################################################################
 
@@ -91,17 +101,22 @@ read -p "Press [Enter] key to download the first file"
 #download data
 #################################################################################
 TILEDOWNLOADPATH="ftp://ftp.glcf.umd.edu/glcf/Landsat/WRS2/p"$TILEPATH"/r"$TILEROW"/${TILEFILESARRAY[0]}/*"
-echo $TILEDOWNLOADPATH
 
-#wget -rq -nd --no-parent -P tmp $TILEDOWNLOADPATH 
+echo "#################################"
+echo "DOWNLOAD DATA\n"
+echo " "
+echo $TILEDOWNLOADPATH
+echo " "
+
 TILENAME=${TILEFILESARRAY[0]}
 
-read -p "Are you sure you want to download the data? " -n 1 -r
+read -p "Are you sure you want to download the data? (y or n) " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     # do dangerous stuff
 	wget -r -nd --no-parent -P tmp $TILEDOWNLOADPATH 
-	echo "finished directory files download"
+	
+	echo "\nfinished directory files download"
 	read -p "Press [Enter] key to continue"
 fi
 
@@ -171,7 +186,9 @@ for i in ${TILEFILESARRAY[@]}; do
 	fi
 done
 
-
+echo "#################################"
+echo "UNZIPING FILES"
+echo " "
 if [[ -a $BAND10 ]]; then 
 echo "tmp/$BAND10" 
 gunzip -d -f $BAND10 
@@ -255,7 +272,9 @@ fi
 #################################################################################
 # GENERATE COMPOSITES
 #################################################################################
-
+echo "#################################"
+echo "GENERATE COMPOSITES"
+echo " "
 #use for surface reflectance 
 #convert ${args[0]} ${args[1]} ${args[2]} -combine -level 0.0%x8% ${args[3]}
 
@@ -297,6 +316,11 @@ geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" $TILENAME".8bit.GEO.453.TIF"
 geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" $TILENAME".8bit.GEO.754.TIF"
 
 rm $TILENAME".8bit.321.TIF"
+rm $TILENAME".8bit.432.TIF"
+rm $TILENAME".8bit.543.TIF"
+rm $TILENAME".8bit.453.TIF"
+rm $TILENAME".8bit.754.TIF"
+
 
 
 # #remove 0 0 0 rgb value and replace with transparency.
