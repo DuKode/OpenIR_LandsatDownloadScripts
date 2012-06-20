@@ -368,7 +368,7 @@ echo "### Running gdal2tiles_openir.py ###"
 TIFFILES=($INDEXDIR/*)
 ARRAY=$(IFS=,; echo "[${TIFFILES[*]}]")
 
-./gdal2tiles_openir.py $ARRAY $INDEXDIR
+./gdal2tiles_openir.py ${ARRAY[*]} $INDEXDIR
 
 
 rm $INDEXDIR"/*.TIF"
