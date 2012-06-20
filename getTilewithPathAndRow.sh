@@ -278,31 +278,45 @@ echo " "
 #use for surface reflectance 
 #convert ${args[0]} ${args[1]} ${args[2]} -combine -level 0.0%x8% ${args[3]}
 
+## TO DO? 
+## add if statement if bands exist. 
+## append stuff to log
+
 #use for GLS2005
+if [[ -a $BAND30TIF && -a $BAND20TIF && -a $BAND10TIF ]]; then 
 convert -monitor $BAND30TIF $BAND20TIF $BAND10TIF -combine $TILENAME".321.TIF"
 echo 'from 16 to 8bit'
 convert -monitor $TILENAME".321.TIF" -depth 8 $TILENAME".8bit.321.TIF"
 rm  $TILENAME".321.TIF"
+fi
 
+if [[ -a $BAND40TIF && -a $BAND30TIF && -a $BAND20TIF ]]; then 
 convert -monitor $BAND40TIF $BAND30TIF $BAND20TIF -combine $TILENAME".432.TIF"
 echo 'from 16 to 8bit'
 convert -monitor $TILENAME".432.TIF" -depth 8 $TILENAME".8bit.432.TIF"
 rm  $TILENAME".432.TIF"
+fi
 
+if [[ -a $BAND50TIF && -a $BAND40TIF && -a $BAND30TIF ]]; then 
 convert -monitor $BAND50TIF $BAND40TIF $BAND30TIF -combine $TILENAME".543.TIF"
 echo 'from 16 to 8bit'
 convert -monitor $TILENAME".543.TIF" -depth 8 $TILENAME".8bit.543.TIF"
 rm $TILENAME".543.TIF"
+fi 
 
+if [[ -a $BAND40TIF && -a $BAND50TIF && -a $BAND30TIF ]]; then 
 convert -monitor $BAND40TIF $BAND50TIF $BAND30TIF -combine $TILENAME".453.TIF"
 echo 'from 16 to 8bit'
 convert -monitor $TILENAME".453.TIF" -depth 8 $TILENAME".8bit.453.TIF"
 rm  $TILENAME".453.TIF" 
+fi
 
+if [[ -a $BAND70TIF && -a $BAND50TIF && -a $BAND40TIF ]]; then 
 convert -monitor $BAND70TIF $BAND50TIF $BAND40TIF -combine $TILENAME".754.TIF"
 echo 'from 16 to 8bit'
 convert -monitor $TILENAME".754.TIF" -depth 8 $TILENAME".8bit.754.TIF"
 rm $TILENAME".754.TIF" 
+fi 
 
 ##########################################
 # // apply georeference to composites // #
