@@ -10,7 +10,8 @@ NUM1=$#
 NUM2=2
 TILEPATH=${args[0]}
 TILEROW=${args[1]}
-TEMPDIR="tmp"
+INDEXDIR="p"$TILEPATH"_r"$TILEROW
+TEMPDIR="TMP_"$INDEXDIR
 
 if [ $NUM1 -eq $NUM2 ]; then
 	echo ""
@@ -53,7 +54,7 @@ if [ -d $TEMPDIR ]; then
 		echo " "
 		if [[ $REPLY =~ ^[Yy]$ ]];then
 			echo "Emptying temporary directory...."
-			rm tmp/*
+			rm $TEMPDIR/*
 			echo "Done"
 		else
 			echo "$TEMPDIR is Empty"
@@ -73,9 +74,9 @@ echo "lookup FTP directory" $TILEDOWNLOADPATH
 read -p "Press [Enter] key to start lookup FTP directory... FTP directory: $TILEDOWNLOADPATH"
 #################################################################################
 
-wget -rq -nd --no-parent -P tmp $TILEDOWNLOADPATH 
-#wget -r -nd --no-parent -P tmp $TILEDOWNLOADPATH 
-cd tmp/
+wget -rq -nd --no-parent -P $TEMPDIR $TILEDOWNLOADPATH 
+#wget -r -nd --no-parent -P $TEMPDIR $TILEDOWNLOADPATH 
+cd $TEMPDIR/
 
 FILES=*
 
@@ -114,7 +115,7 @@ read -p "Are you sure you want to download the data? (y or n) " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     # do dangerous stuff
-	wget -r -nd --no-parent -P tmp $TILEDOWNLOADPATH 
+	wget -r -nd --no-parent -P $TEMPDIR $TILEDOWNLOADPATH 
 	
 	echo "\nfinished directory files download"
 	read -p "Press [Enter] key to continue"
@@ -124,7 +125,7 @@ fi
 #################################################################################
 #read downloaded files
 #################################################################################
-cd tmp/
+cd $TEMPDIR/
 FILES=*
 TILEFILESARRAY=(`echo $FILES`)
 RESULT="found"
@@ -190,7 +191,7 @@ echo "#################################"
 echo "UNZIPING FILES"
 echo " "
 if [[ -a $BAND10 ]]; then 
-echo "tmp/$BAND10" 
+echo "$TEMPDIR/$BAND10" 
 gunzip -d -f $BAND10 
 #$(echo $BAND10|sed 's/.gz/ /g')
 BAND10TIF=$(echo $BAND10|sed 's/.gz/ /g')
@@ -198,7 +199,7 @@ echo $BAND10TIF
 fi 
 
 if [[ -a $BAND20 ]]; then 
-echo "tmp/$BAND20" 
+echo "$TEMPDIR/$BAND20" 
 gunzip -d -f $BAND20 
 #$(echo $BAND10|sed 's/.gz/ /g')
 BAND20TIF=$(echo $BAND20|sed 's/.gz/ /g')
@@ -206,7 +207,7 @@ echo $BAND20TIF
 fi 
 
 if [[ -a $BAND30 ]]; then 
-echo "tmp/$BAND30" 
+echo "$TEMPDIR/$BAND30" 
 gunzip -d -f $BAND30 
 #$(echo $BAND10|sed 's/.gz/ /g')
 BAND30TIF=$(echo $BAND30|sed 's/.gz/ /g')
@@ -214,7 +215,7 @@ echo $BAND30TIF
 fi 
 
 if [[ -a $BAND40 ]]; then 
-echo "tmp/$BAND40" 
+echo "$TEMPDIR/$BAND40" 
 gunzip -d -f $BAND40 
 #$(echo $BAND10|sed 's/.gz/ /g')
 BAND40TIF=$(echo $BAND40|sed 's/.gz/ /g')
@@ -222,7 +223,7 @@ echo $BAND40TIF
 fi 
 
 if [[ -a $BAND50 ]]; then 
-echo "tmp/$BAND50" 
+echo "$TEMPDIR/$BAND50" 
 gunzip -d -f $BAND50 
 #$(echo $BAND10|sed 's/.gz/ /g')
 BAND50TIF=$(echo $BAND50|sed 's/.gz/ /g')
@@ -230,7 +231,7 @@ echo $BAND50TIF
 fi 
 
 if [[ -a $BAND60 ]]; then 
-echo "tmp/$BAND60" 
+echo "$TEMPDIR/$BAND60" 
 gunzip -d -f $BAND60 
 #$(echo $BAND10|sed 's/.gz/ /g')
 BAND60TIF=$(echo $BAND60|sed 's/.gz/ /g')
@@ -238,7 +239,7 @@ echo $BAND60TIF
 fi 
 
 if [[ -a $BAND61 ]]; then 
-echo "tmp/$BAND61" 
+echo "$TEMPDIR/$BAND61" 
 gunzip -d -f $BAND61 
 #$(echo $BAND10|sed 's/.gz/ /g')
 BAND61TIF=$(echo $BAND61|sed 's/.gz/ /g')
@@ -246,7 +247,7 @@ echo $BAND61TIF
 fi 
 
 if [[ -a $BAND62 ]]; then 
-echo "tmp/$BAND62" 
+echo "$TEMPDIR/$BAND62" 
 gunzip -d -f $BAND62
 #$(echo $BAND10|sed 's/.gz/ /g')
 BAND62TIF=$(echo $BAND62|sed 's/.gz/ /g')
@@ -254,7 +255,7 @@ echo $BAND62TIF
 fi 
 
 if [[ -a $BAND70 ]]; then 
-echo "tmp/$BAND70" 
+echo "$TEMPDIR/$BAND70" 
 gunzip -d -f $BAND70 
 #$(echo $BAND10|sed 's/.gz/ /g')
 BAND70TIF=$(echo $BAND70|sed 's/.gz/ /g')
@@ -262,7 +263,7 @@ echo $BAND70TIF
 fi 
 
 if [[ -a $BAND80 ]]; then 
-echo "tmp/$BAND80" 
+echo "$TEMPDIR/$BAND80" 
 gunzip -d -f $BAND80 
 #$(echo $BAND10|sed 's/.gz/ /g')
 BAND80TIF=$(echo $BAND80|sed 's/.gz/ /g')
@@ -323,11 +324,11 @@ fi
 ##########################################
 listgeo $BAND10TIF > $BAND10".txt" 
 
-geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" $TILENAME".8bit.GEO.321.TIF"
-geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" $TILENAME".8bit.GEO.432.TIF"
-geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" $TILENAME".8bit.GEO.543.TIF"
-geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" $TILENAME".8bit.GEO.453.TIF"
-geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" $TILENAME".8bit.GEO.754.TIF"
+geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" "321.TIF"
+geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" "432.TIF"
+geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" "543.TIF"
+geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" "453.TIF"
+geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" "754.TIF"
 
 rm $TILENAME".8bit.321.TIF"
 rm $TILENAME".8bit.432.TIF"
@@ -346,10 +347,31 @@ rm $TILENAME".8bit.754.TIF"
 #################################################################################
 # REMOVE FILES
 #################################################################################
+echo "### Removing TMP dir ###" 
 
 cd ..
-rm tmp/*.jpg
-rm tmp/*.txt
-rm tmp/*0.TIF
-rm tmp/*61.TIF
-rm tmp/*62.TIF
+mkdir $INDEXDIR
+mv $TEMPDIR/"321.TIF" $INDEXDIR
+mv $TEMPDIR/"432.TIF" $INDEXDIR
+mv $TEMPDIR/"543.TIF" $INDEXDIR
+mv $TEMPDIR/"453.TIF" $INDEXDIR
+mv $TEMPDIR/"754.TIF" $INDEXDIR
+
+rm -rf -- $TEMPDIR
+
+
+#################################################################################
+# Slice and generate index.html
+#################################################################################
+echo "### Running gdal2tiles_openir.py ###"
+
+TIFFILES=($INDEXDIR/*)
+ARRAY=$(IFS=,; echo "[${TIFFILES[*]}]")
+
+./gdal2tiles_openir.py $ARRAY $INDEXDIR
+
+
+rm $INDEXDIR"/*.TIF"
+
+echo ###DONE WITH THE PROCESS###
+echo ### Enjoy your maps- OpenIR ###
