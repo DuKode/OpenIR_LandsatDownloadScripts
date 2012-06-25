@@ -284,40 +284,35 @@ echo " "
 ## append stuff to log
 
 #use for GLS2005
-if [[ -a $BAND30TIF && -a $BAND20TIF && -a $BAND10TIF ]]; then 
 convert -monitor $BAND30TIF $BAND20TIF $BAND10TIF -combine $TILENAME".321.TIF"
 echo 'from 16 to 8bit'
 convert -monitor $TILENAME".321.TIF" -depth 8 $TILENAME".8bit.321.TIF"
 rm  $TILENAME".321.TIF"
-fi
 
-if [[ -a $BAND40TIF && -a $BAND30TIF && -a $BAND20TIF ]]; then 
+
 convert -monitor $BAND40TIF $BAND30TIF $BAND20TIF -combine $TILENAME".432.TIF"
 echo 'from 16 to 8bit'
 convert -monitor $TILENAME".432.TIF" -depth 8 $TILENAME".8bit.432.TIF"
 rm  $TILENAME".432.TIF"
-fi
 
-if [[ -a $BAND50TIF && -a $BAND40TIF && -a $BAND30TIF ]]; then 
+
 convert -monitor $BAND50TIF $BAND40TIF $BAND30TIF -combine $TILENAME".543.TIF"
 echo 'from 16 to 8bit'
 convert -monitor $TILENAME".543.TIF" -depth 8 $TILENAME".8bit.543.TIF"
 rm $TILENAME".543.TIF"
-fi 
+ 
 
-if [[ -a $BAND40TIF && -a $BAND50TIF && -a $BAND30TIF ]]; then 
 convert -monitor $BAND40TIF $BAND50TIF $BAND30TIF -combine $TILENAME".453.TIF"
 echo 'from 16 to 8bit'
 convert -monitor $TILENAME".453.TIF" -depth 8 $TILENAME".8bit.453.TIF"
 rm  $TILENAME".453.TIF" 
-fi
 
-if [[ -a $BAND70TIF && -a $BAND50TIF && -a $BAND40TIF ]]; then 
+
 convert -monitor $BAND70TIF $BAND50TIF $BAND40TIF -combine $TILENAME".754.TIF"
 echo 'from 16 to 8bit'
 convert -monitor $TILENAME".754.TIF" -depth 8 $TILENAME".8bit.754.TIF"
 rm $TILENAME".754.TIF" 
-fi 
+ 
 
 ##########################################
 # // apply georeference to composites // #
@@ -325,10 +320,10 @@ fi
 listgeo $BAND10TIF > $BAND10".txt" 
 
 geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" "321.TIF"
-geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" "432.TIF"
-geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" "543.TIF"
-geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" "453.TIF"
-geotifcp -g $BAND10".txt"  $TILENAME".8bit.321.TIF" "754.TIF"
+geotifcp -g $BAND10".txt"  $TILENAME".8bit.432.TIF" "432.TIF"
+geotifcp -g $BAND10".txt"  $TILENAME".8bit.543.TIF" "543.TIF"
+geotifcp -g $BAND10".txt"  $TILENAME".8bit.453.TIF" "453.TIF"
+geotifcp -g $BAND10".txt"  $TILENAME".8bit.754.TIF" "754.TIF"
 
 rm $TILENAME".8bit.321.TIF"
 rm $TILENAME".8bit.432.TIF"
@@ -368,9 +363,10 @@ echo "### Running gdal2tiles_openir.py ###"
 TIFFILES=($INDEXDIR/*)
 ARRAY=$(IFS=,; echo "[${TIFFILES[*]}]")
 
+
 ./gdal2tiles_openir.py ${ARRAY[*]} $INDEXDIR
 
-
+cd ..
 rm $INDEXDIR"/*.TIF"
 
 echo ###DONE WITH THE PROCESS###
