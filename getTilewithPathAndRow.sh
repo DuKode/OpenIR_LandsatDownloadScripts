@@ -279,6 +279,10 @@ echo " "
 #use for surface reflectance 
 #convert ${args[0]} ${args[1]} ${args[2]} -combine -level 0.0%x8% ${args[3]}
 
+## to expand this for removing the black box - nodata fields.
+#remove 0 0 0 rgb value and replace with transparency.
+#gdalwarp -dstalpha -srcnodata "0 0 0" -dstnodata "0 0 0" -co "TILED=YES" ${args[3]}'GEO.TIF' ${args[3]}'GEO_alpha.TIF'
+
 ## TO DO? 
 ## add if statement if bands exist. 
 ## append stuff to log
