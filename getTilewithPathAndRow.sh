@@ -279,10 +279,6 @@ echo " "
 #use for surface reflectance 
 #convert ${args[0]} ${args[1]} ${args[2]} -combine -level 0.0%x8% ${args[3]}
 
-## to expand this for removing the black box - nodata fields.
-#remove 0 0 0 rgb value and replace with transparency.
-#gdalwarp -dstalpha -srcnodata "0 0 0" -dstnodata "0 0 0" -co "TILED=YES" ${args[3]}'GEO.TIF' ${args[3]}'GEO_alpha.TIF'
-
 ## TO DO? 
 ## add if statement if bands exist. 
 ## append stuff to log
@@ -291,6 +287,7 @@ echo " "
 convert -monitor $BAND30TIF $BAND20TIF $BAND10TIF -combine $TILENAME".321.TIF"
 echo 'from 16 to 8bit'
 convert -monitor $TILENAME".321.TIF" -depth 8 $TILENAME".8bit.321.TIF"
+
 rm  $TILENAME".321.TIF"
 
 
@@ -328,6 +325,28 @@ geotifcp -g $BAND10".txt"  $TILENAME".8bit.432.TIF" "432.TIF"
 geotifcp -g $BAND10".txt"  $TILENAME".8bit.543.TIF" "543.TIF"
 geotifcp -g $BAND10".txt"  $TILENAME".8bit.453.TIF" "453.TIF"
 geotifcp -g $BAND10".txt"  $TILENAME".8bit.754.TIF" "754.TIF"
+
+############################################
+#generate alpha information for nodata areas.  
+gdalwarp -dstalpha -srcnodata "0 0 0" -dstnodata "0 0 0" -co "TILED=YES" "321.TIF" "321.alpha.TIF"
+gdalwarp -dstalpha -srcnodata "0 0 0" -dstnodata "0 0 0" -co "TILED=YES" "432.TIF" "432.alpha.TIF"
+gdalwarp -dstalpha -srcnodata "0 0 0" -dstnodata "0 0 0" -co "TILED=YES" "543.TIF" "543.alpha.TIF"
+gdalwarp -dstalpha -srcnodata "0 0 0" -dstnodata "0 0 0" -co "TILED=YES" "453.TIF" "453.alpha.TIF"
+gdalwarp -dstalpha -srcnodata "0 0 0" -dstnodata "0 0 0" -co "TILED=YES" "754.TIF" "754.alpha.TIF"
+
+rm $TILENAME"321.TIF"
+rm $TILENAME"432.TIF"
+rm $TILENAME"543.TIF"
+rm $TILENAME"453.TIF"
+rm $TILENAME"754.TIF"
+
+mv $TILENAME"321.alpha.TIF" "321.TIF"
+mv $TILENAME"432.alpha.TIF" "432.TIF"
+mv $TILENAME"543.alpha.TIF" "543.TIF"
+mv $TILENAME"453.alpha.TIF" "453.TIF"
+mv $TILENAME"754.alpha.TIF" "754.TIF"
+############################################
+
 
 rm $TILENAME".8bit.321.TIF"
 rm $TILENAME".8bit.432.TIF"
