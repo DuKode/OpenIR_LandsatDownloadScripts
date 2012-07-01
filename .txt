@@ -1,0 +1,7 @@
+Usage: listgeo [-d] [-tfw] [-proj4] [-no_norm] [-t tabledir] filename
+
+  -d: report lat/long corners in decimal degrees instead of DMS.
+  -tfw: Generate a .tfw (ESRI TIFF World) file for the target file.
+  -proj4: Report PROJ.4 equivelent projection definition.
+  -no_norm: Don't report 'normalized' parameter values.
+  filename: Name of the GeoTIFF file to report on.
