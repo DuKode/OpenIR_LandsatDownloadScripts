@@ -143,222 +143,9 @@ TILENAME=${TILEFILESARRAY[$SELECTEDINDEX]}
 #ARCHIVEPATH="p$TILEPATH"."r$TILEROW"
 ARCHIVEPATH="${TILEFILESARRAY[$SELECTEDINDEX]}"
 #download new data - create archive with downloaded data p.r and look for archive if no is selected. 
-		
-if [ -d $ARCHIVEPATH ]; then 
-	echo "The selected file >>>> $TILENAME data was found in archive! No download necessary...skip that!"
-	echo "copying files from $ARCHIVEPATH to $TEMPDIR " 
-	cp $ARCHIVEPATH/* $TEMPDIR/
-	echo "done"
-else
-	read -p "Are you sure you want to download the data? (y or n) " -n 1 -r
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
-	    # do dangerous stuff
-		#quiet
-		wget -r -nd --no-parent -P $TEMPDIR $TILEDOWNLOADPATH 
-		
-		echo "\nfinished directory files download"
-		
-		#clean up temp directory of the link files.
-		#clean up temp directory of the link files.
-		echo "Clean up temp directory of the temp ftp link files."
-		n=-1
-		for i in ${TILEFILESARRAY[@]}; do
-			echo "deleting temp files"."$(( n += 1 ))"."" " $i"
-		 	rm "$TEMPDIR/${TILEFILESARRAY[$n]}"
-		done
-		echo "Done"
-		echo "#### "
-		#####
-		
-		read -p "Press [Enter] key to continue"
-		#CREATE A NEW DIRECTORY WITH AN ARCHIVE OF THE DOWNLOADED FILES.
-		echo "#################################"
-		echo "ARCHIVE DOWNLOADED DATA\n"
-		echo "making directory $ARCHIVEPATH"
-		mkdir "$ARCHIVEPATH" 
-		echo "copying files from $TEMPDIR to $ARCHIVEPATH" 
-		cp $TEMPDIR/* $ARCHIVEPATH/
-		echo "Done"
-		echo "#### "
-		echo " "
-	else
-		echo "\nNo data exist on the archive. exit"
-		exit 0
-	fi
-fi
-
-
-#################################################################################
-#read downloaded files
-#################################################################################
-cd $TEMPDIR/
-FILES=*
-TILEFILESARRAY=(`echo $FILES`)
-RESULT="found"
-for i in ${TILEFILESARRAY[@]}; do
-	if [[ "$i" == *B10* ]]; then
-		BAND10=$i
-		#echo "$BAND10 exists!"
-	fi
-	#B20
-	if [[ "$i" == *B20* ]]; then
-		BAND20=$i
-		#echo "$BAND20 exists!"
-	fi
-	#B30
-	if [[ "$i" == *B30* ]]; then
-		BAND30=$i
-		#echo "$BAND30 exists!"
-	fi
-	#B40
-	if [[ "$i" == *B40* ]]; then
-		BAND40=$i
-		#echo "$BAND40 exists!"
-	fi
-	
-	#B50
-	if [[ "$i" == *B50* ]]; then
-		BAND50=$i
-		#echo "$BAND50 exists!"
-	fi
-	
-	#B60
-	if [[ "$i" == *B60* ]]; then
-		BAND60=$i
-		#echo "$BAND60 exists!"
-	fi
-	
-	#B61
-	if [[ "$i" == *B61* ]]; then
-		BAND61=$i
-		#echo "$BAND61 exists!"
-	fi
-	
-	#B62
-	if [[ "$i" == *B62* ]]; then
-		BAND62=$i
-		#echo "$BAND62 exists!"
-	fi
-	
-	#B70
-	if [[ "$i" == *B70* ]]; then
-		BAND70=$i
-		#echo "$BAND70 exists!"
-	fi
-	
-	#B80
-	if [[ "$i" == *B80* ]]; then
-		BAND80=$i
-	#	echo "$BAND80 exists!"
-	fi
-done
-echo "#### "
-echo " "
-echo "#################################"
-echo "UNZIPING FILES"
-echo " "
-if [[ -a $BAND10 ]]; then 
-echo "$TEMPDIR/$BAND10" 
-gunzip -d -f $BAND10 
-#$(echo $BAND10|sed 's/.gz/ /g')
-BAND10TIF=$(echo $BAND10|sed 's/.gz/ /g')
-echo $BAND10TIF
-fi 
-
-if [[ -a $BAND20 ]]; then 
-echo "$TEMPDIR/$BAND20" 
-gunzip -d -f $BAND20 
-#$(echo $BAND10|sed 's/.gz/ /g')
-BAND20TIF=$(echo $BAND20|sed 's/.gz/ /g')
-echo $BAND20TIF
-fi 
-
-if [[ -a $BAND30 ]]; then 
-echo "$TEMPDIR/$BAND30" 
-gunzip -d -f $BAND30 
-#$(echo $BAND10|sed 's/.gz/ /g')
-BAND30TIF=$(echo $BAND30|sed 's/.gz/ /g')
-echo $BAND30TIF
-fi 
-
-if [[ -a $BAND40 ]]; then 
-echo "$TEMPDIR/$BAND40" 
-gunzip -d -f $BAND40 
-#$(echo $BAND10|sed 's/.gz/ /g')
-BAND40TIF=$(echo $BAND40|sed 's/.gz/ /g')
-echo $BAND40TIF
-fi 
-
-if [[ -a $BAND50 ]]; then 
-echo "$TEMPDIR/$BAND50" 
-gunzip -d -f $BAND50 
-#$(echo $BAND10|sed 's/.gz/ /g')
-BAND50TIF=$(echo $BAND50|sed 's/.gz/ /g')
-echo $BAND50TIF
-fi 
-
-if [[ -a $BAND60 ]]; then 
-echo "$TEMPDIR/$BAND60" 
-gunzip -d -f $BAND60 
-#$(echo $BAND10|sed 's/.gz/ /g')
-BAND60TIF=$(echo $BAND60|sed 's/.gz/ /g')
-echo $BAND60TIF
-fi 
-
-if [[ -a $BAND61 ]]; then 
-echo "$TEMPDIR/$BAND61" 
-gunzip -d -f $BAND61 
-#$(echo $BAND10|sed 's/.gz/ /g')
-BAND61TIF=$(echo $BAND61|sed 's/.gz/ /g')
-echo $BAND61TIF
-fi 
-
-if [[ -a $BAND62 ]]; then 
-echo "$TEMPDIR/$BAND62" 
-gunzip -d -f $BAND62
-#$(echo $BAND10|sed 's/.gz/ /g')
-BAND62TIF=$(echo $BAND62|sed 's/.gz/ /g')
-echo $BAND62TIF
-fi 
-
-if [[ -a $BAND70 ]]; then 
-echo "$TEMPDIR/$BAND70" 
-gunzip -d -f $BAND70 
-#$(echo $BAND10|sed 's/.gz/ /g')
-BAND70TIF=$(echo $BAND70|sed 's/.gz/ /g')
-echo $BAND70TIF
-fi 
-
-if [[ -a $BAND80 ]]; then 
-echo "$TEMPDIR/$BAND80" 
-gunzip -d -f $BAND80 
-#$(echo $BAND10|sed 's/.gz/ /g')
-BAND80TIF=$(echo $BAND80|sed 's/.gz/ /g')
-echo $BAND80TIF
-fi 
-
-#################################################################################
-# GENERATE COMPOSITES
-#################################################################################
-echo "#### "
-echo " "
-echo "#################################"
-echo "GENERATE COMPOSITES"
-echo " "
-
-#use for surface reflectance 
-#convert ${args[0]} ${args[1]} ${args[2]} -combine -level 0.0%x8% ${args[3]}
-
-## TO DO? 
-## add if statement if bands exist. 
-## append stuff to log
-
-echo "#################################"
-echo "create processing archive"
-echo " "
 PROCESSINGDIR="$TILENAME.processing"
 PROCESSEDDIR="$TILENAME.PROCESSEDDIR"
-cd ..
+#cd ..
 #ls -A .
 echo "$PROCESSEDDIR"
 if [ -d $PROCESSEDDIR ]; then
@@ -366,8 +153,224 @@ if [ -d $PROCESSEDDIR ]; then
 	rm $TEMPDIR/*
  	cp $PROCESSEDDIR/* $TEMPDIR/
 	echo "done"
-	
 else
+		
+	if [ -d $ARCHIVEPATH ]; then 
+		echo "The selected file >>>> $TILENAME data was found in archive! No download necessary...skip that!"
+		echo "copying files from $ARCHIVEPATH to $TEMPDIR " 
+		cp $ARCHIVEPATH/* $TEMPDIR/
+		echo "done"
+	else
+		read -p "Are you sure you want to download the data? (y or n) " -n 1 -r
+		if [[ $REPLY =~ ^[Yy]$ ]]; then
+		    # do dangerous stuff
+			#quiet
+			wget -r -nd --no-parent -P $TEMPDIR $TILEDOWNLOADPATH 
+		
+			echo "\nfinished directory files download"
+		
+			#clean up temp directory of the link files.
+			#clean up temp directory of the link files.
+			echo "Clean up temp directory of the temp ftp link files."
+			n=-1
+			for i in ${TILEFILESARRAY[@]}; do
+				echo "deleting temp files"."$(( n += 1 ))"."" " $i"
+			 	rm "$TEMPDIR/${TILEFILESARRAY[$n]}"
+			done
+			echo "Done"
+			echo "#### "
+			#####
+		
+			read -p "Press [Enter] key to continue"
+			#CREATE A NEW DIRECTORY WITH AN ARCHIVE OF THE DOWNLOADED FILES.
+			echo "#################################"
+			echo "ARCHIVE DOWNLOADED DATA\n"
+			echo "making directory $ARCHIVEPATH"
+			mkdir "$ARCHIVEPATH" 
+			echo "copying files from $TEMPDIR to $ARCHIVEPATH" 
+			cp $TEMPDIR/* $ARCHIVEPATH/
+			echo "Done"
+			echo "#### "
+			echo " "
+		else
+			echo "\nNo data exist on the archive. exit"
+			exit 0
+		fi
+	fi
+
+
+	#################################################################################
+	#read downloaded files
+	#################################################################################
+	cd $TEMPDIR/
+	FILES=*
+	TILEFILESARRAY=(`echo $FILES`)
+	RESULT="found"
+	for i in ${TILEFILESARRAY[@]}; do
+		if [[ "$i" == *B10* ]]; then
+			BAND10=$i
+			#echo "$BAND10 exists!"
+		fi
+		#B20
+		if [[ "$i" == *B20* ]]; then
+			BAND20=$i
+			#echo "$BAND20 exists!"
+		fi
+		#B30
+		if [[ "$i" == *B30* ]]; then
+			BAND30=$i
+			#echo "$BAND30 exists!"
+		fi
+		#B40
+		if [[ "$i" == *B40* ]]; then
+			BAND40=$i
+			#echo "$BAND40 exists!"
+		fi
+	
+		#B50
+		if [[ "$i" == *B50* ]]; then
+			BAND50=$i
+			#echo "$BAND50 exists!"
+		fi
+	
+		#B60
+		if [[ "$i" == *B60* ]]; then
+			BAND60=$i
+			#echo "$BAND60 exists!"
+		fi
+	
+		#B61
+		if [[ "$i" == *B61* ]]; then
+			BAND61=$i
+			#echo "$BAND61 exists!"
+		fi
+	
+		#B62
+		if [[ "$i" == *B62* ]]; then
+			BAND62=$i
+			#echo "$BAND62 exists!"
+		fi
+	
+		#B70
+		if [[ "$i" == *B70* ]]; then
+			BAND70=$i
+			#echo "$BAND70 exists!"
+		fi
+	
+		#B80
+		if [[ "$i" == *B80* ]]; then
+			BAND80=$i
+		#	echo "$BAND80 exists!"
+		fi
+	done
+	echo "#### "
+	echo " "
+	echo "#################################"
+	echo "UNZIPING FILES"
+	echo " "
+	if [[ -a $BAND10 ]]; then 
+	echo "$TEMPDIR/$BAND10" 
+	gunzip -d -f $BAND10 
+	#$(echo $BAND10|sed 's/.gz/ /g')
+	BAND10TIF=$(echo $BAND10|sed 's/.gz/ /g')
+	echo $BAND10TIF
+	fi 
+
+	if [[ -a $BAND20 ]]; then 
+	echo "$TEMPDIR/$BAND20" 
+	gunzip -d -f $BAND20 
+	#$(echo $BAND10|sed 's/.gz/ /g')
+	BAND20TIF=$(echo $BAND20|sed 's/.gz/ /g')
+	echo $BAND20TIF
+	fi 
+
+	if [[ -a $BAND30 ]]; then 
+	echo "$TEMPDIR/$BAND30" 
+	gunzip -d -f $BAND30 
+	#$(echo $BAND10|sed 's/.gz/ /g')
+	BAND30TIF=$(echo $BAND30|sed 's/.gz/ /g')
+	echo $BAND30TIF
+	fi 
+
+	if [[ -a $BAND40 ]]; then 
+	echo "$TEMPDIR/$BAND40" 
+	gunzip -d -f $BAND40 
+	#$(echo $BAND10|sed 's/.gz/ /g')
+	BAND40TIF=$(echo $BAND40|sed 's/.gz/ /g')
+	echo $BAND40TIF
+	fi 
+
+	if [[ -a $BAND50 ]]; then 
+	echo "$TEMPDIR/$BAND50" 
+	gunzip -d -f $BAND50 
+	#$(echo $BAND10|sed 's/.gz/ /g')
+	BAND50TIF=$(echo $BAND50|sed 's/.gz/ /g')
+	echo $BAND50TIF
+	fi 
+
+	if [[ -a $BAND60 ]]; then 
+	echo "$TEMPDIR/$BAND60" 
+	gunzip -d -f $BAND60 
+	#$(echo $BAND10|sed 's/.gz/ /g')
+	BAND60TIF=$(echo $BAND60|sed 's/.gz/ /g')
+	echo $BAND60TIF
+	fi 
+
+	if [[ -a $BAND61 ]]; then 
+	echo "$TEMPDIR/$BAND61" 
+	gunzip -d -f $BAND61 
+	#$(echo $BAND10|sed 's/.gz/ /g')
+	BAND61TIF=$(echo $BAND61|sed 's/.gz/ /g')
+	echo $BAND61TIF
+	fi 
+
+	if [[ -a $BAND62 ]]; then 
+	echo "$TEMPDIR/$BAND62" 
+	gunzip -d -f $BAND62
+	#$(echo $BAND10|sed 's/.gz/ /g')
+	BAND62TIF=$(echo $BAND62|sed 's/.gz/ /g')
+	echo $BAND62TIF
+	fi 
+
+	if [[ -a $BAND70 ]]; then 
+	echo "$TEMPDIR/$BAND70" 
+	gunzip -d -f $BAND70 
+	#$(echo $BAND10|sed 's/.gz/ /g')
+	BAND70TIF=$(echo $BAND70|sed 's/.gz/ /g')
+	echo $BAND70TIF
+	fi 
+
+	if [[ -a $BAND80 ]]; then 
+	echo "$TEMPDIR/$BAND80" 
+	gunzip -d -f $BAND80 
+	#$(echo $BAND10|sed 's/.gz/ /g')
+	BAND80TIF=$(echo $BAND80|sed 's/.gz/ /g')
+	echo $BAND80TIF
+	fi 
+
+	#################################################################################
+	# GENERATE COMPOSITES
+	#################################################################################
+	echo "#### "
+	echo " "
+	echo "#################################"
+	echo "GENERATE COMPOSITES"
+	echo " "
+
+	#use for surface reflectance 
+	#convert ${args[0]} ${args[1]} ${args[2]} -combine -level 0.0%x8% ${args[3]}
+
+	## TO DO? 
+	## add if statement if bands exist. 
+	## append stuff to log
+
+	echo "#################################"
+	echo "create processing archive"
+	echo " "
+	# PROCESSINGDIR="$TILENAME.processing"
+	# PROCESSEDDIR="$TILENAME.PROCESSEDDIR"
+
+
 	echo "creating temp archive @ $TILENAME.processing"
 	if [ -d $PROCESSINGDIR ]; then
 		echo "dir exists ok!"
