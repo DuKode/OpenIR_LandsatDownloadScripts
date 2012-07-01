@@ -11,7 +11,7 @@ NUM2=2
 TILEPATH=${args[0]}
 TILEROW=${args[1]}
 INDEXDIR="p"$TILEPATH"_r"$TILEROW
-TEMPDIR="TMP_"$INDEXDIR
+TEMPDIR="TEMP_"$INDEXDIR
 
 if [ $NUM1 -eq $NUM2 ]; then
 	echo ""
@@ -148,6 +148,7 @@ if [ -d $ARCHIVEPATH ]; then
 	echo "The selected file >>>> $TILENAME data was found in archive! No download necessary...skip that!"
 	echo "copying files from $ARCHIVEPATH to $TEMPDIR " 
 	cp $ARCHIVEPATH/* $TEMPDIR/
+	echo "done"
 else
 	read -p "Are you sure you want to download the data? (y or n) " -n 1 -r
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -352,22 +353,35 @@ echo " "
 ## add if statement if bands exist. 
 ## append stuff to log
 
-
-echo "create processed archive"
-PROCESSEDDIR="$TILENAME.processed"
+echo "#################################"
+echo "create processing archive"
+echo " "
+PROCESSINGDIR="$TILENAME.processing"
+PROCESSEDDIR="$TILENAME.PROCESSEDDIR"
 cd ..
-ls -A .
+#ls -A .
+echo "$PROCESSEDDIR"
 if [ -d $PROCESSEDDIR ]; then
- 	cp $PROCESSEDDIR/* $TMPDIR/
+	echo "finilized archive exists @ $TILENAME.PROCESSEDDIR ok! "
+	rm $TEMPDIR/*
+ 	cp $PROCESSEDDIR/* $TEMPDIR/
+	echo "done"
+	
 else
-echo "create processed archive1"
-	mkdir $PROCESSEDDIR
+	echo "creating temp archive @ $TILENAME.processing"
+	if [ -d $PROCESSINGDIR ]; then
+		echo "dir exists ok!"
+	else
+		mkdir $PROCESSINGDIR
+	fi
   	echo "cd $TEMPDIR/"
   	cd $TEMPDIR/
 #echo "create processed archive2"
-	ls -A .
+#	ls -A .
 #echo "create processed archive3"	
-
+echo "done"
+echo "#### "
+echo " "
 	read -p "Process all band combinations(321, 432, 543, 453, 745)? /Yes/ will process all / /No/ I want to select specific bands(y or n) " -n 1 -r
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
 
@@ -472,17 +486,19 @@ echo "create processed archive1"
 		cp "$TILENAME.543.alpha.TIF" "543.TIF"
 		cp "$TILENAME.453.alpha.TIF" "453.TIF"
 		cp "$TILENAME.754.alpha.TIF" "754.TIF"
-
+	
 		echo "done"
 		echo "#### "
 		echo "moving files to processed archive"
 		cd ..
-		cp "$TEMPDIR/$TILENAME.321.alpha.TIF" "$PROCESSEDDIR/321.TIF"
-		cp "$TEMPDIR/$TILENAME.432.alpha.TIF" "$PROCESSEDDIR/432.TIF"
-		cp "$TEMPDIR/$TILENAME.543.alpha.TIF" "$PROCESSEDDIR/543.TIF"
-		cp "$TEMPDIR/$TILENAME.453.alpha.TIF" "$PROCESSEDDIR/453.TIF"
-		cp "$TEMPDIR/$TILENAME.754.alpha.TIF" "$PROCESSEDDIR/754.TIF"
+		cp "$TEMPDIR/$TILENAME.321.alpha.TIF" "$PROCESSINGDIR/321.TIF"
+		cp "$TEMPDIR/$TILENAME.432.alpha.TIF" "$PROCESSINGDIR/432.TIF"
+		cp "$TEMPDIR/$TILENAME.543.alpha.TIF" "$PROCESSINGDIR/543.TIF"
+		cp "$TEMPDIR/$TILENAME.453.alpha.TIF" "$PROCESSINGDIR/453.TIF"
+		cp "$TEMPDIR/$TILENAME.754.alpha.TIF" "$PROCESSINGDIR/754.TIF"
+		mv $PROCESSINGDIR $PROCESSEDDIR
 		cd $TEMPDIR
+		
 		echo "done"
 	else
 		echo "commented out for test"
@@ -617,17 +633,34 @@ echo "create processed archive1"
 # REMOVE FILES
 #################################################################################
 echo "### Removing TMP dir ###" 
+ls
+#cd ..
+ls 
 
-cd ..
-mkdir $INDEXDIR
-mv $TEMPDIR/"321.TIF" $INDEXDIR
-mv $TEMPDIR/"432.TIF" $INDEXDIR
-mv $TEMPDIR/"543.TIF" $INDEXDIR
-mv $TEMPDIR/"453.TIF" $INDEXDIR
-mv $TEMPDIR/"754.TIF" $INDEXDIR
-
+if [ -d  $INDEXDIR ]; then 
+	echo "directory exists" 
+	ls -A
+	rm  $INDEXDIR/*
+	#mkdir $INDEXDIR
+	mv $TEMPDIR/* $INDEXDIR/
+	#mv $TEMPDIR/"321.TIF" $INDEXDIR
+	 # mv $TEMPDIR/"432.TIF" $INDEXDIR
+	 # mv $TEMPDIR/"543.TIF" $INDEXDIR
+	 # mv $TEMPDIR/"453.TIF" $INDEXDIR
+	 # mv $TEMPDIR/"754.TIF" $INDEXDIR
+else 
+	echo "directory does not exist " 
+	ls
+	 mkdir $INDEXDIR
+	 mv $TEMPDIR/"321.TIF" $INDEXDIR
+	 mv $TEMPDIR/"432.TIF" $INDEXDIR
+	 mv $TEMPDIR/"543.TIF" $INDEXDIR
+	 mv $TEMPDIR/"453.TIF" $INDEXDIR
+	 mv $TEMPDIR/"754.TIF" $INDEXDIR
+fi
 #delete temp directory
-
+echo "done"
+echo " "
 rm -rf -- $TEMPDIR
 
 
@@ -641,7 +674,7 @@ ARRAY=$(IFS=,; echo "[${TIFFILES[*]}]")
 
 ./gdal2tiles_openir.py ${ARRAY[*]} $INDEXDIR
 
-cd ..
+#cd ..
 rm $INDEXDIR"/*.TIF"
 
 echo ###DONE WITH THE PROCESS###
