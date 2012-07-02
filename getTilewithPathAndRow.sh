@@ -374,12 +374,15 @@ else
 	echo "creating temp archive @ $TILENAME.processing"
 	if [ -d $PROCESSINGDIR ]; then
 		echo "dir exists ok!"
+		cd $TEMPDIR/
 	else
+		cd ..
 		mkdir $PROCESSINGDIR
+		ls
+	  	# echo "cd $TEMPDIR/"
+	  	cd $TEMPDIR/
 	fi
-	ls
-  	echo "cd $TEMPDIR/"
-  	cd $TEMPDIR/
+
 #echo "create processed archive2"
 #	ls -A .
 #echo "create processed archive3"	
@@ -405,22 +408,22 @@ echo " "
 		echo 'from 16 to 8bit'
 		convert -monitor $TILENAME".432.TIF" -depth 8 $TILENAME".8bit.432.TIF"
 		rm  $TILENAME".432.TIF"
-
-
-
+		
+		
+		
 		convert -monitor $BAND50TIF $BAND40TIF $BAND30TIF -combine $TILENAME".543.TIF"
 		echo 'from 16 to 8bit'
 		convert -monitor $TILENAME".543.TIF" -depth 8 $TILENAME".8bit.543.TIF"
 		rm $TILENAME".543.TIF"
-
-
-
+		
+		
+		
 		convert -monitor $BAND40TIF $BAND50TIF $BAND30TIF -combine $TILENAME".453.TIF"
 		echo 'from 16 to 8bit'
 		convert -monitor $TILENAME".453.TIF" -depth 8 $TILENAME".8bit.453.TIF"
 		rm  $TILENAME".453.TIF" 
-
-
+		
+		
 		convert -monitor $BAND70TIF $BAND50TIF $BAND40TIF -combine $TILENAME".754.TIF"
 		echo 'from 16 to 8bit'
 		convert -monitor $TILENAME".754.TIF" -depth 8 $TILENAME".8bit.754.TIF"
@@ -455,26 +458,26 @@ echo " "
 		# #generate alpha information for nodata areas.  
 		# echo ''
 		gdalwarp -dstalpha -srcnodata "0 0 0" -dstnodata "0 0 0" -co "TILED=YES" "$TILENAME.432.TIF" "$TILENAME.432.alpha.TIF"
-
-
+		
+		
 		geotifcp -g $BAND10".txt"  $TILENAME".8bit.543.TIF" "$TILENAME.543.TIF"
 		rm $TILENAME".8bit.543.TIF"
 		# ############################################
 		# #generate alpha information for nodata areas.  
 		# echo ''
 		gdalwarp -dstalpha -srcnodata "0 0 0" -dstnodata "0 0 0" -co "TILED=YES" "$TILENAME.543.TIF" "$TILENAME.543.alpha.TIF"
-
-
-
+		
+		
+		
 		geotifcp -g $BAND10".txt"  $TILENAME".8bit.453.TIF" "$TILENAME.453.TIF"
 		rm $TILENAME".8bit.453.TIF"
 		# ############################################
 		# #generate alpha information for nodata areas.  
 		# echo ''
 		gdalwarp -dstalpha -srcnodata "0 0 0" -dstnodata "0 0 0" -co "TILED=YES" "$TILENAME.453.TIF" "$TILENAME.453.alpha.TIF"
-
-
-
+		
+		
+		
 		geotifcp -g $BAND10".txt"  $TILENAME".8bit.754.TIF" "$TILENAME.754.TIF"
 		rm $TILENAME".8bit.754.TIF"
 		# ############################################
@@ -501,7 +504,10 @@ echo " "
 		cp "$TEMPDIR/$TILENAME.453.alpha.TIF" "$PROCESSINGDIR/453.TIF"
 		cp "$TEMPDIR/$TILENAME.754.alpha.TIF" "$PROCESSINGDIR/754.TIF"
 		mv $PROCESSINGDIR $PROCESSEDDIR
-		cd $TEMPDIR
+		# cd $TEMPDIR
+		# 	ls
+		# 	cd ..
+		# 	ls 
 		
 		echo "done"
 	else
@@ -637,9 +643,6 @@ echo " "
 # REMOVE FILES
 #################################################################################
 echo "### Removing TMP dir ###" 
-ls
-#cd ..
-ls 
 
 if [ -d  $INDEXDIR ]; then 
 	echo "directory exists" 
@@ -654,7 +657,7 @@ if [ -d  $INDEXDIR ]; then
 	 # mv $TEMPDIR/"754.TIF" $INDEXDIR
 else 
 	echo "directory does not exist " 
-	ls
+	 ls
 	 mkdir $INDEXDIR
 	 mv $TEMPDIR/"321.TIF" $INDEXDIR
 	 mv $TEMPDIR/"432.TIF" $INDEXDIR
@@ -676,7 +679,7 @@ echo "### Running gdal2tiles_openir.py ###"
 TIFFILES=($INDEXDIR/*)
 ARRAY=$(IFS=,; echo "[${TIFFILES[*]}]")
 
-./gdal2tiles_openir.py ${ARRAY[*]} $INDEXDIR
+python gdal2tiles_openir.py ${ARRAY[*]} $INDEXDIR
 
 #cd ..
 rm $INDEXDIR"/*.TIF"
