@@ -377,6 +377,7 @@ else
 	else
 		mkdir $PROCESSINGDIR
 	fi
+	ls
   	echo "cd $TEMPDIR/"
   	cd $TEMPDIR/
 #echo "create processed archive2"
