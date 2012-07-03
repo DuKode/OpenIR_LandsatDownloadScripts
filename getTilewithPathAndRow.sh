@@ -151,7 +151,7 @@ echo "$PROCESSEDDIR"
 if [ -d $PROCESSEDDIR ]; then
 	echo "finilized archive exists @ $TILENAME.PROCESSEDDIR ok! "
 	rm $TEMPDIR/*
- 	cp $PROCESSEDDIR/* $TEMPDIR/
+ 	cp $PROCESSEDDIR/321.TIF $TEMPDIR/
 	echo "done"
 else
 		
@@ -647,7 +647,13 @@ echo "### Removing TMP dir ###"
 if [ -d  $INDEXDIR ]; then 
 	echo "directory exists" 
 	ls -A
-	rm  $INDEXDIR/*
+	echo "cd indexdir"
+	cd $INDEXDIR 
+	ls -A
+	#rm "*"
+	echo "cd .."
+	cd .. 
+	#rm  $INDEXDIR"/*"
 	#mkdir $INDEXDIR
 	mv $TEMPDIR/* $INDEXDIR/
 	#mv $TEMPDIR/"321.TIF" $INDEXDIR
@@ -657,7 +663,7 @@ if [ -d  $INDEXDIR ]; then
 	 # mv $TEMPDIR/"754.TIF" $INDEXDIR
 else 
 	echo "directory does not exist " 
-	 ls
+	 ls -A
 	 mkdir $INDEXDIR
 	 mv $TEMPDIR/"321.TIF" $INDEXDIR
 	 mv $TEMPDIR/"432.TIF" $INDEXDIR
@@ -675,14 +681,21 @@ rm -rf -- $TEMPDIR
 # Slice and generate index.html
 #################################################################################
 echo "### Running gdal2tiles_openir.py ###"
+ls -A 
 
-TIFFILES=($INDEXDIR/*)
+TIFFILES=($INDEXDIR/*.TIF)
+echo $TIFFILES
 ARRAY=$(IFS=,; echo "[${TIFFILES[*]}]")
 
 python gdal2tiles_openir.py ${ARRAY[*]} $INDEXDIR
 
-cd ..
-rm $INDEXDIR"/*.TIF"
+#ls -A 
+
+cd $INDEXDIR
+ls -A
+rm *.TIF
+cd .. 
+#rm $INDEXDIR"/*.TIF"
 
 echo ###DONE WITH THE PROCESS###
 echo ### Enjoy your maps- OpenIR ###
