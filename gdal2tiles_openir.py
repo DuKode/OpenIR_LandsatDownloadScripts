@@ -2237,11 +2237,11 @@ class GDAL2Tiles(object):
                                         <head>
                                         <title>%(title)s</title>
                                         
-					<link rel="stylesheet" href="dist/leaflet.css" />
+					<link rel="stylesheet" href="CloudMade-Leaflet-v0.3.1/dist/leaflet.css" />
 					<!--[if lte IE 8]>
-					<link rel="stylesheet" href="dist/leaflet.ie.css" />
+					<link rel="stylesheet" href="CloudMade-Leaflet-v0.3.1/dist/leaflet.ie.css" />
 					<![endif]-->                                        
-					<script type="text/javascript" src="dist/leaflet.js"></script>
+					<script type="text/javascript" src="CloudMade-Leaflet-v0.3.1/dist/leaflet.js"></script>
 
                                         """ % args
                                     
