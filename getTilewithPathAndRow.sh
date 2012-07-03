@@ -681,7 +681,7 @@ ARRAY=$(IFS=,; echo "[${TIFFILES[*]}]")
 
 python gdal2tiles_openir.py ${ARRAY[*]} $INDEXDIR
 
-#cd ..
+cd ..
 rm $INDEXDIR"/*.TIF"
 
 echo ###DONE WITH THE PROCESS###
