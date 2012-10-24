@@ -98,16 +98,18 @@ if [ $TILEFILESARRAYlength == "0" ]; then
 	exit 0 #exit 
 fi
 
-echo; echo "Hit a number between 0 - $TILEFILESARRAYlength, then hit return."
+
+echo; echo "Hit a number between 0 - $TILEFILESARRAYlength, then hit return. \n NOTE: select only L... files no functionality for p... yet"
 
 selection=
 until [ "$selection" = "0" ]; do
-	read keypress
+	read -n2 keypress -p "hit return to continue." 
 	case "$keypress" in
-		[0-9] ) 
+		[0-"$TILEFILESARRAYlength"]* ) 
 			echo "Pending statement for the validity of the entry... TO DO"
 			SELECTEDINDEX="$keypress"
-			TILEDOWNLOADPATH="ftp://ftp.glcf.umd.edu/glcf/Landsat/WRS2/p"$TILEPATH"/r"$TILEROW"/${TILEFILESARRAY[SELECTEDINDEX]}/*"
+			echo "\nKEYPRESS = $keypress"
+		TILEDOWNLOADPATH="ftp://ftp.glcf.umd.edu/glcf/Landsat/WRS2/p"$TILEPATH"/r"$TILEROW"/${TILEFILESARRAY[SELECTEDINDEX]}/*"
 			
 			#elaborate on code to check if directory is valid.
 			#wget ftp://ftp.glcf.umd.edu/glcf/Landsat/WRS2/p020/r032/p020r032_7dx20010821.ETM-GLS2000/* && echo exists || echo not exist
@@ -115,6 +117,7 @@ until [ "$selection" = "0" ]; do
 			break
 	 	;;
 		* ) echo "Please enter a valid selection"
+			echo "$SELECTEDINDEX"
 	esac
 done
 cd .. 
@@ -207,58 +210,58 @@ else
 	TILEFILESARRAY=(`echo $FILES`)
 	RESULT="found"
 	for i in ${TILEFILESARRAY[@]}; do
-		if [[ "$i" == *B10* ]]; then
+		if [ "$i" == *B10* ] || [ "$i" == *10.tif* ]; then
 			BAND10=$i
 			#echo "$BAND10 exists!"
 		fi
 		#B20
-		if [[ "$i" == *B20* ]]; then
+		if [ "$i" == *B20* ] || [ "$i" == *20.tif* ]; then
 			BAND20=$i
 			#echo "$BAND20 exists!"
 		fi
 		#B30
-		if [[ "$i" == *B30* ]]; then
+		if [ "$i" == *B30* ] || [ "$i" == *30.tif* ]; then
 			BAND30=$i
 			#echo "$BAND30 exists!"
 		fi
 		#B40
-		if [[ "$i" == *B40* ]]; then
+		if [ "$i" == *B40* ] || [ "$i" == *40.tif* ]; then
 			BAND40=$i
 			#echo "$BAND40 exists!"
 		fi
 	
 		#B50
-		if [[ "$i" == *B50* ]]; then
+		if [ "$i" == *B50* ] || [ "$i" == *50.tif* ]; then
 			BAND50=$i
 			#echo "$BAND50 exists!"
 		fi
 	
 		#B60
-		if [[ "$i" == *B60* ]]; then
+		if [ "$i" == *B60* ] || [ "$i" == *60.tif* ]; then
 			BAND60=$i
 			#echo "$BAND60 exists!"
 		fi
 	
 		#B61
-		if [[ "$i" == *B61* ]]; then
+		if [ "$i" == *B61* ] || [ "$i" == *61.tif* ]; then
 			BAND61=$i
 			#echo "$BAND61 exists!"
 		fi
 	
 		#B62
-		if [[ "$i" == *B62* ]]; then
+		if [ "$i" == *B62* ] || [ "$i" == *62.tif* ]; then
 			BAND62=$i
 			#echo "$BAND62 exists!"
 		fi
 	
 		#B70
-		if [[ "$i" == *B70* ]]; then
+		if [ "$i" == *B70* ] || [ "$i" == *70.tif* ]; then
 			BAND70=$i
 			#echo "$BAND70 exists!"
 		fi
 	
 		#B80
-		if [[ "$i" == *B80* ]]; then
+		if [ "$i" == *B80* ] || [ "$i" == *80.tif* ]; then
 			BAND80=$i
 		#	echo "$BAND80 exists!"
 		fi
@@ -389,7 +392,7 @@ else
 echo "done"
 echo "#### "
 echo " "
-	read -p "Process all band combinations(321, 432, 543, 453, 745)? /Yes/ will process all / /No/ I want to select specific bands(y or n) " -n 1 -r
+	read -p "Process all band combinations(321, 432, 543, 453, 745)? /Yes/ will process all / /No/ I want to select specific bands (y or n) " -n 1 -r
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
 
 
@@ -687,7 +690,7 @@ TIFFILES=($INDEXDIR/*.TIF)
 echo $TIFFILES
 ARRAY=$(IFS=,; echo "[${TIFFILES[*]}]")
 
-python gdal2tiles_openir.py ${ARRAY[*]} $INDEXDIR
+# python gdal2tiles_openir.py ${ARRAY[*]} $INDEXDIR
 
 #ls -A 
 
